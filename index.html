@@ -23,7 +23,7 @@ html {
 body{font-family:var(--fs);background:var(--ch);color:var(--ww);min-height:100vh;padding-bottom:72px;}
 
 /* TOP BAR */
-.topbar{background:var(--cr);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.topbar{background:var(--cr);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:44px;z-index:50;}
 .tb-logo{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--ww);}
 .tb-logo span{color:#fff;}
 .tb-sub{font-size:0.92rem;color:rgba(253,246,236,0.6);letter-spacing:0.1em;text-transform:uppercase;}
@@ -359,7 +359,7 @@ body{top:0 !important;}
     <option value="nl">Nederlands (Dutch)</option>
     <option value="en">English (Reset)</option>
   </select>
-  <span class="gt-note" onclick="showToast('Select a language — Bakekar opens in Google Translate in a new tab. Professional terms like Ganache, Couverture, SMBC stay in English — like Latin in medicine.')">&#9432; Opens translated in new tab &middot; Professional terms stay in English</span>
+  <span class="gt-note" onclick="showToast('Selecting a language opens Bakekar fully translated in a new tab via Google Translate. Professional terms like Ganache, Couverture, SMBC stay in English — like Latin in medicine.')">&#9432; Opens in new tab &middot; Professional terms stay in English</span>
 </div>
 
 <div id="browserWarning" style="display:none;background:#8B0000;color:#fff;padding:10px 14px;font-size:0.88rem;line-height:1.5;text-align:center;position:sticky;top:60px;z-index:49">&#9888; Bakekar works best in <strong>Chrome</strong> or <strong>Firefox</strong>. Some features may not work in your current browser. <span onclick="document.getElementById('browserWarning').style.display='none'" style="cursor:pointer;font-weight:700">&#10005;</span></div>
@@ -2095,7 +2095,7 @@ function setTimestamp() {
   if (!el) return;
   var now = new Date();
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  el.textContent = 'v1.0100 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
+  el.textContent = 'v1.0101 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
 }
 
 // ===== DISCLAIMER / FIRST OPEN =====
@@ -3781,22 +3781,22 @@ function bkSetLang(lang) {
   if (!lang) return;
   var drop = document.getElementById('bkLangDrop');
   if (lang === 'en') {
-    // Already in English — just reset dropdown
     if (drop) drop.value = '';
     showToast('Already in English');
     return;
   }
-  // Use Google Translate URL proxy — most reliable method for single page apps
-  var currentUrl = window.location.href;
-  // Strip any existing translate proxy if present
-  if (currentUrl.indexOf('translate.google.com') > -1) {
-    currentUrl = decodeURIComponent(currentUrl.split('&u=')[1] || currentUrl);
-  }
+  var langName = drop ? drop.options[drop.selectedIndex].text : lang;
+  // Use Google Translate URL proxy
+  var currentUrl = 'https://harishkumar-vatakara.github.io/bakekar';
   var translateUrl = 'https://translate.google.com/translate?sl=en&tl=' + lang + '&u=' + encodeURIComponent(currentUrl);
-  showToast('Opening in ' + (drop ? drop.options[drop.selectedIndex].text : lang) + '...');
+  showToast('Opening Bakekar in ' + langName + ' in new tab...');
   setTimeout(function(){
-    window.open(translateUrl, '_blank');
-  }, 600);
+    var newTab = window.open(translateUrl, '_blank');
+    if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+      // Popup blocked - use same tab
+      window.location.href = translateUrl;
+    }
+  }, 800);
 }
 
 
@@ -3858,13 +3858,13 @@ function buildIssueText(){
   var device=document.getElementById('issueDevice')?document.getElementById('issueDevice').value.trim():'';
   var ssDesc=document.getElementById('screenshotDesc')?document.getElementById('screenshotDesc').value.trim():'';
   var sl={sev1:'SEV 1 - App Down',sev2:'SEV 2 - Critical',sev3:'SEV 3 - Partial',sev4:'SEV 4 - Minor',sev5:'SEV 5 - Cosmetic'};
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0100';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0101';
   return '\uD83D\uDEA8 BAKEKAR ISSUE REPORT\nSeverity: '+(sl[sev]||'Not selected')+'\nScreen: '+(screen||'Not specified')+'\nVersion: '+ver+(device?'\nDevice: '+device:'')+'\n\nISSUE:\n'+(desc||'(no description)')+(ssDesc?'\n\nSCREENSHOT NOTE:\n'+ssDesc:'')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function buildFeedbackText(){
   var type=document.getElementById('feedbackType')?document.getElementById('feedbackType').value:'';
   var desc=document.getElementById('feedbackDesc')?document.getElementById('feedbackDesc').value.trim():'';
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0100';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0101';
   return '\uD83D\uDCA1 BAKEKAR FEEDBACK\nType: '+(type||'General')+'\nPriority: '+currentFBPriority+'\nVersion: '+ver+'\n\nFEEDBACK:\n'+(desc||'(no feedback)')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function submitIssue(){
