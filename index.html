@@ -359,7 +359,8 @@ body{top:0 !important;}
     <option value="nl">Nederlands (Dutch)</option>
     <option value="en">English (Reset)</option>
   </select>
-  <span class="gt-note" onclick="showToast('Selecting a language opens Bakekar fully translated in a new tab via Google Translate. Professional terms like Ganache, Couverture, SMBC stay in English — like Latin in medicine.')">&#9432; Opens in new tab &middot; Professional terms stay in English</span>
+  <a id="gtLangLink" href="#" target="_blank" style="display:none;font-size:0.78rem;color:var(--go);font-weight:700;text-decoration:underline;flex-shrink:0;"></a>
+  <span class="gt-note" onclick="showToast('Select a language to open Bakekar fully translated. Professional terms like Ganache, Couverture, SMBC stay in English — like Latin in medicine.')">&#9432; Professional terms stay in English</span>
 </div>
 
 <div id="browserWarning" style="display:none;background:#8B0000;color:#fff;padding:10px 14px;font-size:0.88rem;line-height:1.5;text-align:center;position:sticky;top:60px;z-index:49">&#9888; Bakekar works best in <strong>Chrome</strong> or <strong>Firefox</strong>. Some features may not work in your current browser. <span onclick="document.getElementById('browserWarning').style.display='none'" style="cursor:pointer;font-weight:700">&#10005;</span></div>
@@ -2095,7 +2096,7 @@ function setTimestamp() {
   if (!el) return;
   var now = new Date();
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  el.textContent = 'v1.0101 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
+  el.textContent = 'v1.0110 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
 }
 
 // ===== DISCLAIMER / FIRST OPEN =====
@@ -3782,21 +3783,21 @@ function bkSetLang(lang) {
   var drop = document.getElementById('bkLangDrop');
   if (lang === 'en') {
     if (drop) drop.value = '';
-    showToast('Already in English');
+    var linkEl = document.getElementById('gtLangLink');
+    if (linkEl) linkEl.style.display = 'none';
     return;
   }
   var langName = drop ? drop.options[drop.selectedIndex].text : lang;
-  // Use Google Translate URL proxy
   var currentUrl = 'https://harishkumar-vatakara.github.io/bakekar';
   var translateUrl = 'https://translate.google.com/translate?sl=en&tl=' + lang + '&u=' + encodeURIComponent(currentUrl);
-  showToast('Opening Bakekar in ' + langName + ' in new tab...');
-  setTimeout(function(){
-    var newTab = window.open(translateUrl, '_blank');
-    if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
-      // Popup blocked - use same tab
-      window.location.href = translateUrl;
-    }
-  }, 800);
+  // Show tap link in language bar - most reliable method
+  var linkEl = document.getElementById('gtLangLink');
+  if (linkEl) {
+    linkEl.href = translateUrl;
+    linkEl.innerHTML = '&#128073; Tap here to open Bakekar in ' + langName;
+    linkEl.style.display = 'block';
+    linkEl.style.marginTop = '4px';
+  }
 }
 
 
@@ -3858,13 +3859,13 @@ function buildIssueText(){
   var device=document.getElementById('issueDevice')?document.getElementById('issueDevice').value.trim():'';
   var ssDesc=document.getElementById('screenshotDesc')?document.getElementById('screenshotDesc').value.trim():'';
   var sl={sev1:'SEV 1 - App Down',sev2:'SEV 2 - Critical',sev3:'SEV 3 - Partial',sev4:'SEV 4 - Minor',sev5:'SEV 5 - Cosmetic'};
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0101';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0110';
   return '\uD83D\uDEA8 BAKEKAR ISSUE REPORT\nSeverity: '+(sl[sev]||'Not selected')+'\nScreen: '+(screen||'Not specified')+'\nVersion: '+ver+(device?'\nDevice: '+device:'')+'\n\nISSUE:\n'+(desc||'(no description)')+(ssDesc?'\n\nSCREENSHOT NOTE:\n'+ssDesc:'')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function buildFeedbackText(){
   var type=document.getElementById('feedbackType')?document.getElementById('feedbackType').value:'';
   var desc=document.getElementById('feedbackDesc')?document.getElementById('feedbackDesc').value.trim():'';
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0101';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0110';
   return '\uD83D\uDCA1 BAKEKAR FEEDBACK\nType: '+(type||'General')+'\nPriority: '+currentFBPriority+'\nVersion: '+ver+'\n\nFEEDBACK:\n'+(desc||'(no feedback)')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function submitIssue(){
@@ -3988,6 +3989,14 @@ var THEORY_VIDEOS = {
     {title:'Mango Coulis — No Cook Method',url:'https://www.youtube.com/results?search_query=mango+coulis+sauce+recipe+tutorial+no+cook'},
     {title:'Dessert Plating Techniques — Pools Drizzles Dots',url:'https://www.youtube.com/results?search_query=dessert+plating+techniques+sauce+pool+drizzle+dots'},
     {title:'Butterscotch Sauce Brown Sugar Recipe',url:'https://www.youtube.com/results?search_query=butterscotch+sauce+brown+sugar+recipe+tutorial'}
+  ],
+  stabilisers:[
+    {title:'Gelatin vs Agar Agar Differences and Uses',url:'https://www.youtube.com/results?search_query=gelatin+vs+agar+agar+differences+baking+stabiliser'},
+    {title:'How to Use Agar Agar in Baking and Desserts',url:'https://www.youtube.com/results?search_query=how+to+use+agar+agar+baking+desserts+substitute+gelatin'},
+    {title:'Xanthan Gum in Baking — What it Does',url:'https://www.youtube.com/results?search_query=xanthan+gum+baking+what+it+does+gluten+free'},
+    {title:'Pectin Types and Uses in Pastry',url:'https://www.youtube.com/results?search_query=pectin+types+NH+HM+uses+pastry+mirror+glaze'},
+    {title:'Namelaka Recipe — Ultra Creamy Chocolate Cream',url:'https://www.youtube.com/results?search_query=namelaka+recipe+chocolate+cream+valrhona+tutorial'},
+    {title:'Matt Adlard Stabilised Chocolate Cream Tutorial',url:'https://www.youtube.com/channel/UCOvPpNDsz_ePFOTKhmDaDnQ'}
   ],
   ganache:[
     {title:'Ganache Ratios Explained — Drip Frosting Truffle',url:'https://www.youtube.com/results?search_query=ganache+ratios+explained+drip+frosting+truffle'},
@@ -4598,7 +4607,7 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
         <div>
           <div style="font-weight:700;font-size:0.9rem">&#129354; Frostings &amp; Icings Guide</div>
           <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">ABC, SMBC, IMBC, ganache, royal icing, mirror glaze, fondant</div>
-          <div style="font-size:0.68rem;color:var(--go);margin-top:3px">&#128218; 10 types + India climate guide</div>
+          <div style="font-size:0.68rem;color:var(--go);margin-top:3px">&#128218; 11 types + India climate guide</div>
         </div>
         <div style="color:var(--go);font-size:1.2rem">&#8250;</div>
       </div>
@@ -4621,6 +4630,20 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
         <span style="font-size:0.72rem;color:var(--go);margin-left:8px">&#9432;</span>
       </div>
     </div>
+    <div class="pr-card" style="margin-bottom:10px;cursor:pointer" onclick="nav('th-stabilisers')">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-weight:700;font-size:0.9rem">&#9878; Stabilisers &amp; Setting Agents</div>
+          <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">Gelatin, agar, xanthan gum, pectin, carrageenan — vegan and dietary guide</div>
+          <div style="font-size:0.68rem;color:var(--go);margin-top:3px">&#128218; 6 topics &middot; Indian climate guide &middot; dietary status table</div>
+        </div>
+        <div style="color:var(--go);font-size:1.2rem">&#8250;</div>
+      </div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)">
+        <button onclick="event.stopPropagation();showVideoLinks('stabilisers')" style="background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;cursor:pointer;font-weight:600">&#127916; Watch Videos</button>
+        <span style="font-size:0.72rem;color:var(--go);margin-left:8px">&#9432;</span>
+      </div>
+    </div>
     <div class="pr-card" style="margin-bottom:10px;cursor:pointer" onclick="nav('th-fillings')">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
@@ -4635,6 +4658,94 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
         <span style="font-size:0.72rem;color:var(--go);margin-left:8px">&#9432;</span>
       </div>
     </div>
+
+  <div style="margin-top:16px;margin-bottom:8px">
+    <div style="font-size:0.85rem;font-weight:700;color:var(--ww);margin-bottom:4px">&#127916; Recommended YouTube Channels</div>
+    <div style="font-size:0.72rem;color:var(--tm);margin-bottom:10px">Professional English-language baking educators — verified audio and content quality</div>
+
+    <div class="pr-card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:0.85rem">&#127850; Sugar Geek Show — Liz Marek</div>
+          <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">Portland, Oregon, USA &middot; Award-winning pastry educator &middot; India connection (Mumbai)</div>
+          <div style="font-size:0.78rem;line-height:1.7;margin-top:6px">Science-based baking, SMBC, IMBC, cake decorating, sculpted cakes, frosting techniques. Hosted Cakeology Cake Show in Mumbai. Featured on Food Network, Good Morning America. Clear American English.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <a href="https://www.youtube.com/@SugarGeekShow" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
+      </div>
+      <div style="font-size:0.68rem;color:var(--tm);margin-top:6px">&#9432; Link provided as reference only. Bakekar is not responsible for third-party content or outcomes.</div>
+    </div>
+
+    <div class="pr-card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:0.85rem">&#127859; Preppy Kitchen — John Kanell</div>
+          <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">Los Angeles, USA &middot; NYT Bestselling Author &middot; 9 million followers</div>
+          <div style="font-size:0.78rem;line-height:1.7;margin-top:6px">Baking recipes, pastry, cakes, detailed tutorials for all levels. Former math and science teacher — explains baking science clearly. Featured on Ellen, Good Morning America, The Today Show. Very clear American English.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <a href="https://www.youtube.com/@PreppyKitchen" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
+      </div>
+      <div style="font-size:0.68rem;color:var(--tm);margin-top:6px">&#9432; Link provided as reference only. Bakekar is not responsible for third-party content or outcomes.</div>
+    </div>
+
+    <div class="pr-card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:0.85rem">&#127801; Hanbit Cho — Sugar Lane Baking Academy</div>
+          <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">Seoul, South Korea &middot; Oxford Mathematics Graduate &middot; Professional Pastry Chef</div>
+          <div style="font-size:0.78rem;line-height:1.7;margin-top:6px">French patisserie, entremet, mirror glaze, ganache, advanced techniques. Quit finance career in 2018 to become a pastry chef. All videos 100% in English — not Korean with subtitles. Best channel for advanced Theory Library topics. Precise scientific explanations.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <a href="https://www.youtube.com/@HanbitCho" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
+      </div>
+      <div style="font-size:0.68rem;color:var(--tm);margin-top:6px">&#9432; Link provided as reference only. Bakekar is not responsible for third-party content or outcomes.</div>
+    </div>
+
+    <div class="pr-card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:0.85rem">&#129752; Ekat's Academy — Ekaterina</div>
+          <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">Australia &middot; Award-winning cake artist &middot; 15,000+ students worldwide</div>
+          <div style="font-size:0.78rem;line-height:1.7;margin-top:6px">Wafer paper flowers (peonies, ranunculus, anemones, poppies, cosmos), sugar flowers, edible fabrics, chocolate techniques, mirror glaze mousse cakes, faux velvet, bas-relief, stencilling, gold leaf techniques. 250+ lessons. The specialist channel for advanced cake decoration and wafer paper work. Clear Australian English.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <a href="https://www.youtube.com/@ekatsacademy" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
+      </div>
+      <div style="font-size:0.68rem;color:var(--tm);margin-top:6px">&#9432; Link provided as reference only. Bakekar is not responsible for third-party content or outcomes.</div>
+    </div>
+
+    <div class="pr-card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:0.85rem">&#127800; Florea Cakes — Anna</div>
+          <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">Specialised wafer paper flowers &middot; modern wedding cakes &middot; business focused</div>
+          <div style="font-size:0.78rem;line-height:1.7;margin-top:6px">Lightweight realistic wafer paper flowers with no wires and no templates. Modern wedding cake design, elegant centrepiece cakes, downloadable templates. Practical tutorials for bakers building a cake business from home. Best channel specifically for wafer paper flower techniques.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <a href="https://www.youtube.com/@florea-cakes" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
+      </div>
+      <div style="font-size:0.68rem;color:var(--tm);margin-top:6px">&#9432; Link provided as reference only. Bakekar is not responsible for third-party content or outcomes.</div>
+    </div>
+<div class="pr-card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:0.85rem">&#127850; Matt Adlard — Topless Baker</div>
+          <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">United Kingdom &middot; Self-taught professional pastry chef &middot; Bake It Better Academy</div>
+          <div style="font-size:0.78rem;line-height:1.7;margin-top:6px">Stabilised creams, chocolate work, entremet, mirror glaze, advanced patisserie techniques. Most followed pastry chef in the UK — 2 million followers. Food Network judge (Christmas Cookie Challenge, Chopped Sweets). Author of Bake It Better (2023) and The Science of Baking (upcoming). Self-taught, known for scientific approach to pastry. Clear British English. Free recipes at mattadlard.com.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <a href="https://www.youtube.com/channel/UCOvPpNDsz_ePFOTKhmDaDnQ" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
+      </div>
+      <div style="font-size:0.68rem;color:var(--tm);margin-top:6px">&#9432; Link provided as reference only. Bakekar is not responsible for third-party content or outcomes.</div>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -6414,6 +6525,8 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Recipe</div><div style="font-size:0.82rem;line-height:1.8">2 egg whites (or 5g meringue powder + 30ml water) &nbsp;|&nbsp; 400g icing sugar (sifted) &nbsp;|&nbsp; 1 tsp lemon juice<br><br>Beat egg whites until foamy. Add icing sugar gradually. Beat until thick, glossy stiff peaks. Add lemon juice.</div></div>
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Consistency Guide</div><div style="font-size:0.82rem;line-height:1.8"><strong>Stiff:</strong> Piping outlines, flowers, letters<br><strong>Medium:</strong> Detail work, lace<br><strong>Flood (10-second rule):</strong> Add water until ribbon disappears in 10 seconds — filling cookie outlines</div></div>
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--cr);margin-bottom:6px">Important Notes</div><div style="font-size:0.82rem;line-height:1.8">Dries HARD and BRITTLE — not suitable as a frosting layer. Cover bowl with damp cloth while working — dries in minutes. Does not freeze — make fresh.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--cr);margin-bottom:6px">Grease-Free Equipment — Critical Rule</div><div style="font-size:0.82rem;line-height:1.8">Ensure all bowls, whisks, spatulas and piping bags are completely grease-free before making royal icing. Any oil or fat — even a trace — will cause the icing to break down and refuse to stiffen. Wash equipment with hot soapy water and dry thoroughly. Avoid plastic bowls which can retain grease in scratches — use glass or metal.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Meringue Powder Alternative — Food Safety</div><div style="font-size:0.82rem;line-height:1.8">If customers are concerned about raw egg whites — pregnant women, elderly, children — substitute with meringue powder. Use 5g meringue powder + 30ml water per egg white. Result is identical in texture and stability. Meringue powder is pasteurised egg white — completely safe. Available at baking supply stores in Bangalore. This is important for Indian market where raw egg safety questions are common.</div></div>
   </div>
   <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('fr-mirror')">
     <div style="display:flex;justify-content:space-between"><div style="font-weight:700">&#127775; Mirror Glaze</div><div id="fa-fr-mirror" style="color:var(--go)">+</div></div>
@@ -6441,6 +6554,20 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
   <div id="fc-fr-acetate" style="display:none;margin-bottom:8px">
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">What is a Buttercream Acetate Collar?</div><div style="font-size:0.82rem;line-height:1.8">Acetate strip used as a mould — not coated with chocolate. The cake is assembled inside the strip. The acetate holds filling perfectly vertical and gives flawlessly smooth straight sides when removed after setting.<br><br><strong>Different from chocolate collar:</strong> No chocolate, no tempering. This is purely a structural moulding technique.</div></div>
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Method</div><div style="font-size:0.82rem;line-height:1.8">1. Line inside of cake ring with acetate strip.<br>2. Build cake layers inside — sponge, filling, sponge, filling.<br>3. Refrigerate or freeze until fully set.<br>4. Remove ring. Peel acetate — perfectly smooth sides revealed.<br><br>Essential for mirror glaze cakes, mousse cakes, entremets with visible layers.</div></div>
+  </div>
+
+<div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('fr-german')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700">&#127858; German Buttercream (Custard Base)</div><div id="fa-fr-german" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Pudding base &middot; less sweet &middot; eggless option &middot; &#9888; most heat sensitive</div>
+  </div>
+  <div id="fc-fr-german" style="display:none;margin-bottom:8px">
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">What is German Buttercream?</div><div style="font-size:0.82rem;line-height:1.8">German Buttercream uses a cooked custard or vanilla pudding base beaten with butter. No meringue, no eggs needed when using pudding mix. Result is silky smooth, less sweet than ABC, with a rich creamy custard flavour. Very popular in continental European baking — increasingly used by Indian premium home bakers for its professional texture and mild sweetness.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Recipe (Florence Method — Home Baker Friendly)</div><div style="font-size:0.82rem;line-height:1.8">700ml full fat milk &nbsp;|&nbsp; 90g sugar (7 tbsp — increased slightly for Indian palate) &nbsp;|&nbsp; 60g vanilla pudding mix (Dr Oetker or similar) &nbsp;|&nbsp; 500g unsalted butter (soft, room temperature) &nbsp;|&nbsp; 1 tsp vanilla extract &nbsp;|&nbsp; Pinch of salt<br><br>1. Add milk, pudding powder, sugar and vanilla to a pot. Whisk before heating — no lumps.<br>2. Cook over medium heat stirring constantly until thick pudding forms.<br>3. Remove from heat. Cover surface directly with cling film — prevents skin forming.<br>4. Cool completely to room temperature — this step cannot be rushed.<br>5. Beat butter until light and fluffy — 5 minutes.<br>6. Add cooled pudding one spoonful at a time while beating continuously.<br>7. Beat until smooth, creamy and fully combined.<br><br><strong>Makes enough to fill and frost one 8-inch 2-layer cake.</strong></div></div>
+    <div class="pr-card" style="border:2px solid var(--go)"><div style="font-size:0.82rem;font-weight:700;color:var(--go);margin-bottom:6px">&#9888; Critical Tip — Temperature Match</div><div style="font-size:0.82rem;line-height:1.8">Pudding and butter MUST be at the same temperature before combining — both at room temperature, ideally 20-22°C. Pudding too cold + warm butter = split buttercream. This is the single most common failure in German Buttercream. If it splits: warm bowl slightly over hot water, beat again — it usually comes back together.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Indian Flavour Variations</div><div style="font-size:0.82rem;line-height:1.8"><strong>Cardamom:</strong> Add 1 tsp cardamom powder to pudding while cooking — pairs beautifully with vanilla sponge<br><strong>Saffron:</strong> Steep a pinch of saffron in 2 tbsp warm milk, add to pudding — golden colour, royal flavour<br><strong>Mango:</strong> Replace 100ml milk with 100ml Alphonso mango puree — vibrant tropical German BC<br><strong>Rose:</strong> Add 1 tsp rose water to finished buttercream — delicate and fragrant<br><strong>Coffee:</strong> Dissolve 2 tsp instant coffee in 1 tbsp hot milk, add to pudding<br><strong>Paan:</strong> Add 1 tsp paan extract to finished buttercream — unique Indian signature flavour</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Why Pudding Mix Instead of Egg Yolks</div><div style="font-size:0.82rem;line-height:1.8">Traditional German Buttercream uses egg yolk custard (crème pâtissière). The pudding mix method gives nearly identical results with two advantages:<br><br><strong>Eggless:</strong> Pudding mix contains no eggs — makes the buttercream suitable for eggless orders. Important for Jain and vegetarian customers who avoid eggs but consume dairy.<br><strong>Consistent:</strong> Pudding mix sets reliably every time. Egg yolk custard can scramble if overheated — pudding mix does not.<br><br>Dr Oetker vanilla pudding mix is available at most baking supply stores in Bangalore. &#8377;40-60 per packet, one packet (37g) makes approximately 500ml pudding.</div></div>
+    <div class="pr-card" style="border:2px solid var(--cr)"><div style="font-size:0.85rem;font-weight:700;color:var(--cr);margin-bottom:6px">&#9888; Indian Climate Warning — Most Heat Sensitive Buttercream</div><div style="font-size:0.82rem;line-height:1.8">German Buttercream is the most heat sensitive of all buttercreams — even more than ABC. The custard base softens at lower temperatures than pure butter.<br><br>Bangalore summer (March-May, 35°C+): German Buttercream cannot be used for delivery cakes or outdoor events. Melts within 15-20 minutes at room temperature.<br><br>Best for: AC bakery display, indoor events, take-away with cold packs, refrigerated gifting boxes.<br><br>Refrigerate German BC cakes until 15 minutes before serving. Store leftover buttercream refrigerated up to 1 week. Freeze up to 1 month — bring to room temperature and re-beat before using.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">German Buttercream vs Other Types</div><div style="font-size:0.82rem;line-height:1.8"><strong>vs ABC:</strong> Less sweet, silkier texture, more heat sensitive, eggless possible<br><strong>vs SMBC:</strong> Easier to make (no hot meringue stage), slightly less stable, eggless possible, richer flavour<br><strong>vs IMBC:</strong> Much easier, no thermometer for syrup, less stable in heat<br><br>Best occasions: Indoor birthday cakes, refrigerated dessert boxes, AC wedding cake tasting samples, continental European style cakes (Black Forest, opera cake, dobos torte).</div></div>
   </div>
   <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('fr-compare')">
     <div style="display:flex;justify-content:space-between"><div style="font-weight:700">&#128203; Which Frosting to Use — India Guide</div><div id="fa-fr-compare" style="color:var(--go)">+</div></div>
@@ -6527,6 +6654,108 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Ganache is Eggless — Important for Indian Market</div><div style="font-size:0.82rem;line-height:1.8">Standard ganache contains only chocolate and cream — no eggs. This makes it naturally suitable for eggless cake orders, which are common in India for vegetarian, Jain and religious occasion cakes. Always confirm cream is acceptable for the customer (some strict vegetarians avoid dairy cream — offer coconut cream ganache as an alternative).</div></div>
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Pricing Ganache Orders</div><div style="font-size:0.82rem;line-height:1.8">Couverture ganache: premium pricing — material cost alone is 3-4x compound. Always disclose to customer and charge accordingly.<br>Compound ganache: standard pricing — most everyday birthday cake ganache uses compound.<br>Drip cake with ganache drip: charge &#8377;150-300 extra for the drip service beyond the base cake price — the technique and extra time warrant it.<br>Truffle box (12 pieces, couverture ganache centres): &#8377;600-1200 depending on flavours and packaging.</div></div>
     <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Most Popular Ganache Orders in India</div><div style="font-size:0.82rem;line-height:1.8">Dark chocolate drip cake — most requested drip style<br>Whipped dark ganache frosting on chocolate cake — richer alternative to chocolate buttercream<br>Dark ganache under fondant for summer weddings — most stable base<br>White ganache with mango — premium Indian flavour combination<br>Chocolate truffle box — Diwali and gifting market<br>Dark chocolate ganache filling in layered cake — classic combination with vanilla sponge</div></div>
+  </div>
+
+</div>
+</div>
+
+<!-- THEORY: STABILISERS -->
+<div class="screen" id="sc-th-stabilisers">
+  <button class="back-btn" onclick="nav('theory')">&#8592; Theory Library</button>
+  <div class="sec-title">&#9878; Stabilisers &amp; Setting Agents <span style="cursor:pointer" onclick="showTooltip('Gelatin, agar, xanthan gum, pectin, carrageenan — dietary status, Indian climate guide, where to buy',event)">&#9432;</span></div>
+  <button onclick="showVideoLinks('stabilisers')" style="background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:6px 16px;font-size:0.78rem;color:#ff7777;cursor:pointer;font-weight:600;margin-bottom:12px">&#127916; Watch Videos for this Section</button>
+  <div id="stabilisers-content" style="display:block;margin-bottom:12px">
+
+  <div class="info-badge" style="margin-bottom:10px">&#9432; Stabilisers control how creams, mousses, glazes and fillings set and hold their shape. Choosing the wrong stabiliser for Indian climate or dietary requirements is one of the most common professional baking mistakes. This guide covers everything you need to know.</div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-overview')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700">&#128203; Dietary Status — At a Glance</div><div id="fa-st-overview" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Vegan &middot; vegetarian &middot; Jain &middot; Halal status for all stabilisers</div>
+  </div>
+  <div id="fc-st-overview" style="display:none;margin-bottom:8px">
+    <div class="pr-card" style="border:2px solid var(--cr)"><div style="font-size:0.85rem;font-weight:700;color:var(--cr);margin-bottom:8px">&#9888; Critical for Indian Market — Read This First</div><div style="font-size:0.82rem;line-height:1.8">India has the world's largest vegetarian population. Many Bakekar users are vegetarian, Jain or Muslim. Always check stabiliser source before using in any recipe. Gelatin is the most commonly misused stabiliser in Indian baking — many bakers do not realise it is animal-derived.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:8px">Stabiliser Dietary Status</div>
+      <div style="font-size:0.82rem;line-height:2">
+        <div style="display:flex;gap:8px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--bd)"><div style="flex:1;font-weight:700">Stabiliser</div><div style="flex:1;font-weight:700">Source</div><div style="flex:1;font-weight:700">Vegan</div><div style="flex:1;font-weight:700">Vegetarian</div><div style="flex:1;font-weight:700">Jain</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--bd)"><div style="flex:1;font-weight:700">Gelatin</div><div style="flex:1">Animal bones</div><div style="flex:1;color:var(--cr)">&#10007; No</div><div style="flex:1;color:var(--cr)">&#10007; No</div><div style="flex:1;color:var(--cr)">&#10007; No</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--bd)"><div style="flex:1;font-weight:700">Agar Agar</div><div style="flex:1">Red algae</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--go)">&#10003; Yes</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--bd)"><div style="flex:1;font-weight:700">Xanthan Gum</div><div style="flex:1">Fermented</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--tm)">&#9432; Check</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--bd)"><div style="flex:1;font-weight:700">Pectin</div><div style="flex:1">Fruit skin</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--go)">&#10003; Yes</div></div>
+        <div style="display:flex;gap:8px"><div style="flex:1;font-weight:700">Carrageenan</div><div style="flex:1">Seaweed</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--go)">&#10003; Yes</div><div style="flex:1;color:var(--go)">&#10003; Yes</div></div>
+      </div>
+    </div>
+    <div class="info-badge">&#9432; Always label your products clearly. If a recipe contains gelatin, the product is NON-VEGETARIAN and must be communicated to customers before purchase. Never assume a customer knows gelatin is animal-derived.</div>
+  </div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-gelatin')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700;color:var(--cr)">&#9888; Gelatin — Animal Derived</div><div id="fa-st-gelatin" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Porcine or bovine &middot; NOT vegetarian &middot; softest mouthfeel &middot; heat sensitive</div>
+  </div>
+  <div id="fc-st-gelatin" style="display:none;margin-bottom:8px">
+    <div class="pr-card" style="border:1px solid var(--cr)"><div style="font-size:0.78rem;font-weight:700;color:var(--cr);margin-bottom:6px">Source and Dietary Status</div><div style="font-size:0.82rem;line-height:1.8">Gelatin is made from animal bones, skin and connective tissue — primarily porcine (pig) or bovine (cow). Standard commercial gelatin (Dr Oetker, Knox) is porcine.<br><br><strong>NOT suitable for:</strong> Vegetarians, Jains, Hindus who avoid beef, Muslims unless Halal certified bovine gelatin is used.<br><br><strong>Halal certified bovine gelatin</strong> is available at specialty stores in Bangalore for Muslim customers. Always confirm source with supplier.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Why Gelatin is Used</div><div style="font-size:0.82rem;line-height:1.8">Gelatin gives the softest, most luscious mouthfeel of all stabilisers. Mousse, panna cotta, mirror glaze and Namelaka made with gelatin have a melt-in-mouth quality that agar and other plant stabilisers cannot fully replicate. In French patisserie gelatin is the standard — all professional entremet recipes use it.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">How to Use Gelatin</div><div style="font-size:0.82rem;line-height:1.8"><strong>Powdered gelatin:</strong> Bloom in cold water (ratio 1:6 — 1g gelatin to 6g water) for 5 minutes. Melt gently — microwave 5 seconds or over warm water. Never boil — destroys setting ability.<br><br><strong>Sheet/leaf gelatin:</strong> Soak in cold water 5 minutes until soft. Squeeze out excess water. Add directly to warm mixture.<br><br><strong>Bloom strength matters:</strong> Most Indian recipes use standard 200 bloom gelatin (Dr Oetker). Professional recipes may specify platinum (250 bloom) — use 20% less if substituting.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--cr);margin-bottom:6px">Indian Climate Warning</div><div style="font-size:0.82rem;line-height:1.8">Gelatin sets melt above 35°C. In Bangalore summer (35-40°C) gelatin-stabilised mousses and creams require continuous refrigeration — they cannot sit at room temperature. For outdoor events or summer deliveries use agar or carrageenan instead.</div></div>
+  </div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-agar')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700;color:var(--go)">&#10003; Agar Agar — Best Indian Substitute</div><div id="fa-st-agar" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Red algae &middot; vegan &middot; Jain friendly &middot; heat stable &middot; China grass</div>
+  </div>
+  <div id="fc-st-agar" style="display:none;margin-bottom:8px">
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Source and Dietary Status</div><div style="font-size:0.82rem;line-height:1.8">Agar agar is derived from red algae — completely plant based. Vegan, vegetarian, Jain friendly, Halal, Kosher. The best and most practical gelatin substitute for Indian market.<br><br>Known as <strong>China Grass</strong> in Indian cooking — used in traditional Indian desserts and jelly-set sweets. Available at every Indian grocery store in powder, strip and flake forms. Powder form is easiest to use for baking.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Key Differences from Gelatin</div><div style="font-size:0.82rem;line-height:1.8"><strong>Sets firmer:</strong> Agar gives a slightly firmer, more brittle set than gelatin. The mouthfeel is less silky — it breaks cleanly rather than melting smoothly.<br><strong>Sets at room temperature:</strong> Agar sets above 32-40°C — does not need refrigeration to set. Excellent for Indian climate.<br><strong>Heat stable:</strong> Agar set holds up to 85°C before melting — dramatically more heat stable than gelatin (melts at 35°C).<br><strong>Not reversible easily:</strong> Once set at room temperature, agar is harder to remelt than gelatin.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">How to Use Agar</div><div style="font-size:0.82rem;line-height:1.8">Agar MUST be boiled to fully activate — minimum 1 minute at full boil. Dissolving in warm water only gives a gritty undissolved texture.<br><br><strong>Substitution ratio for gelatin:</strong> Use 0.9g agar powder per 1g gelatin powder. Agar is slightly stronger — do not substitute 1:1.<br><br><strong>Matt Adlard's agar chocolate cream ratio:</strong> 2.2g agar per 400g liquid — gives a soft, spreadable set suitable for cake filling.</div></div>
+    <div class="info-badge">&#9432; <strong>Bangalore tip:</strong> Agar is the recommended stabiliser for any product that will be at room temperature during events or delivery in Indian summer. Its heat stability makes it far more reliable than gelatin for Indian conditions.</div>
+  </div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-xanthan')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700;color:var(--go)">&#10003; Xanthan Gum</div><div id="fa-st-xanthan" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Fermented &middot; vegan &middot; tiny quantities &middot; gluten-free baking &middot; heat stable</div>
+  </div>
+  <div id="fc-st-xanthan" style="display:none;margin-bottom:8px">
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Source and Dietary Status</div><div style="font-size:0.82rem;line-height:1.8">Xanthan gum is produced by bacterial fermentation of sugars by Xanthomonas campestris. Completely vegan and vegetarian. Generally accepted as Jain — check with individual practitioners as some avoid fermented products.<br><br>Used commercially in salad dressings, ice cream and gluten-free products. Available at specialty baking stores in Bangalore and online.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">How Xanthan Works</div><div style="font-size:0.82rem;line-height:1.8">Xanthan gum is a thickener and stabiliser — it does not gel like agar or gelatin. Instead it creates a viscous, stable texture that resists separation. Extremely small quantities are needed — typically 0.1-0.5% of total liquid weight.<br><br><strong>Matt Adlard's ratio:</strong> 0.4g xanthan per 420g liquid. At this level it stabilises the cream without making it gummy or sticky.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Primary Uses in Baking</div><div style="font-size:0.82rem;line-height:1.8">Gluten-free baking — replaces gluten structure in GF flour blends (0.5g per 100g GF flour for cakes, 1g per 100g for bread). Stabilising whipped cream — prevents deflation and weeping. Stabilising chocolate creams and mousses — Matt Adlard method. Ice cream — prevents ice crystal formation. Salad dressings and sauces — prevents separation.</div></div>
+  </div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-pectin')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700;color:var(--go)">&#10003; Pectin</div><div id="fa-st-pectin" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Fruit skin &middot; vegan &middot; mirror glaze &middot; fruit confit &middot; jam setting</div>
+  </div>
+  <div id="fc-st-pectin" style="display:none;margin-bottom:8px">
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Source and Types</div><div style="font-size:0.82rem;line-height:1.8">Pectin is extracted from apple or citrus fruit skins — completely plant based. Vegan, vegetarian, Jain friendly, Halal, Kosher.<br><br><strong>Two main types for baking:</strong><br><strong>Pectin NH (Thermoreversible):</strong> Melts when heated, sets when cooled. Used for mirror glazes, fruit confit layers in entremets, glazed fruit tarts. Can be remelted and reused.<br><strong>HM Pectin (High Methoxyl):</strong> Sets irreversibly once cooled. Used for jams, jellies, fruit pastes. Cannot be remelted.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Uses in Professional Baking</div><div style="font-size:0.82rem;line-height:1.8">Mirror glaze — Pectin NH gives a glossy thermoreversible glaze. Fruit confit in entremets — as seen in the Blackcurrant Violet entremet recipe. Glazed fruit tarts — neutral nappage glaze over fresh fruit. Pâte de fruits — French fruit jellies, firm fruit confection. Jam and preserve making.<br><br>Available at specialty baking stores in Bangalore and online. Pectin NH is the most useful type for cake decorating.</div></div>
+  </div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-carrageenan')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700;color:var(--go)">&#10003; Carrageenan</div><div id="fa-st-carrageenan" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Seaweed &middot; vegan &middot; dairy applications &middot; commercial stabiliser</div>
+  </div>
+  <div id="fc-st-carrageenan" style="display:none;margin-bottom:8px">
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Source and Types</div><div style="font-size:0.82rem;line-height:1.8">Carrageenan is extracted from red seaweed — vegan, vegetarian, Jain friendly, Halal.<br><br><strong>Three types:</strong><br>Kappa carrageenan — firm, brittle gel. Sets in presence of potassium ions.<br>Iota carrageenan — soft, elastic gel. Sets in presence of calcium ions. Best for dairy applications.<br>Lambda carrageenan — does not gel, used as thickener only.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Uses and Indian Context</div><div style="font-size:0.82rem;line-height:1.8">Primarily used in commercial food production — chocolate milk, ice cream, processed cheese, whipped cream stabilisation. Less commonly used in home baking compared to agar, gelatin and pectin.<br><br>For Indian home bakers: carrageenan is less practical than agar for most applications. Agar is more widely available, better understood and gives more predictable results. Carrageenan is worth knowing for professional production where its specific dairy-synergistic properties matter.</div></div>
+  </div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-matt')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700">&#127850; Stabilised Chocolate Cream — Three Methods</div><div id="fa-st-matt" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Matt Adlard recipe &middot; agar &middot; xanthan gum &middot; gelatin (Namelaka) &middot; comparison</div>
+  </div>
+  <div id="fc-st-matt" style="display:none;margin-bottom:8px">
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Why Three Methods?</div><div style="font-size:0.82rem;line-height:1.8">Professional pastry chef Matt Adlard developed three versions of stabilised chocolate cream using different hydrocolloids. Each gives a different texture and suits different dietary requirements and climate conditions. For Indian bakers the agar version is most practical — vegan, widely available and heat stable.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Version 1 — Agar Chocolate Cream (Recommended for India)</div><div style="font-size:0.82rem;line-height:1.8">20g sugar &nbsp;|&nbsp; 2.2g agar powder &nbsp;|&nbsp; 250g whole milk &nbsp;|&nbsp; 150g heavy cream &nbsp;|&nbsp; 15g glucose syrup or honey &nbsp;|&nbsp; 200g dark chocolate 70% &nbsp;|&nbsp; Pinch flaky salt<br><br>Whisk sugar and agar together dry. Add milk, cream and glucose. Bring to full boil — cook 1 minute. Pour over chopped chocolate. Rest 2 minutes. Blend until smooth. Cover surface with cling film. Refrigerate 2 hours until soft gel. Blend again until smooth before using.<br><br><strong>Vegan:</strong> Yes (substitute dairy cream with coconut cream). <strong>Heat stable:</strong> Yes. <strong>Indian availability:</strong> All ingredients easily available.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Version 2 — Xanthan Gum Chocolate Cream</div><div style="font-size:0.82rem;line-height:1.8">20g sugar &nbsp;|&nbsp; 0.4g xanthan gum &nbsp;|&nbsp; 120g whole milk &nbsp;|&nbsp; 300g heavy cream &nbsp;|&nbsp; 40g egg yolks &nbsp;|&nbsp; 200g dark chocolate 70% &nbsp;|&nbsp; Pinch flaky salt<br><br>Contains egg yolks — not eggless. Very silky texture. Heat stable. Use immediately after making — does not need to set in refrigerator like agar version.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Version 3 — Namelaka (Gelatin Chocolate Cream)</div><div style="font-size:0.82rem;line-height:1.8">3g powdered gelatin &nbsp;|&nbsp; 18g cold water &nbsp;|&nbsp; 100g whole milk &nbsp;|&nbsp; 10g liquid glucose &nbsp;|&nbsp; 135g dark chocolate 70% melted &nbsp;|&nbsp; 200g heavy cream &nbsp;|&nbsp; Pinch flaky salt<br><br>Namelaka means "ultra creamy" in Japanese — developed by Valrhona. The most luxurious mouthfeel of the three. NOT suitable for vegetarians. Use gelatin source appropriate for your customer. Not heat stable — keep refrigerated.<br><br>Bloom gelatin in cold water 5 minutes. Heat milk and glucose to simmer. Add bloomed gelatin to hot milk. Pour over melted chocolate. Blend. Add cold cream. Blend again. Refrigerate overnight — sets to a silky pipeable cream.</div></div>
+    <div class="info-badge">&#9432; Full credit to Matt Adlard (mattadlard.com) for the three stabilised chocolate cream recipes. Adapted here for Indian market context and dietary guidance.</div>
+  </div>
+
+  <div class="pr-card" style="margin-bottom:8px;cursor:pointer" onclick="toggleFilling('st-india')">
+    <div style="display:flex;justify-content:space-between"><div style="font-weight:700">&#127470;&#127475; India Climate and Market Guide</div><div id="fa-st-india" style="color:var(--go)">+</div></div>
+    <div style="font-size:0.72rem;color:var(--tm)">Which stabiliser for which season &middot; where to buy in Bangalore &middot; pricing</div>
+  </div>
+  <div id="fc-st-india" style="display:none;margin-bottom:8px">
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">By Season — Bangalore</div><div style="font-size:0.82rem;line-height:1.8"><strong>Summer (March-May, 35-40°C):</strong> Agar or carrageenan only. Gelatin products will melt at delivery. Xanthan gum stable.<br><strong>Monsoon (June-September, 28-32°C, high humidity):</strong> Agar preferred. Gelatin usable with AC storage and cold delivery. Humidity affects xanthan gum consistency slightly.<br><strong>Winter (October-February, 18-26°C):</strong> All stabilisers work well. Gelatin gives best mouthfeel results in this season.</div></div>
+    <div class="pr-card"><div style="font-size:0.78rem;font-weight:700;color:var(--go);margin-bottom:6px">Where to Buy in Bangalore</div><div style="font-size:0.82rem;line-height:1.8">Agar agar powder: Every Indian grocery store, KR Market, Amazon India. &#8377;30-80 per 100g.<br>Gelatin powder (Dr Oetker): Supermarkets, baking stores, Amazon. &#8377;60-120 per box.<br>Xanthan gum: Specialty baking stores, Amazon India. &#8377;200-400 per 100g.<br>Pectin NH: Specialty baking stores, online baking suppliers. &#8377;300-600 per 100g.<br>Carrageenan: Online only, specialty food ingredient suppliers. &#8377;400-800 per 100g.</div></div>
   </div>
 
 </div>
@@ -7161,4 +7390,5 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
   </div>
 </div>
 
-</body></html>
+</body></html
+>
