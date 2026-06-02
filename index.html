@@ -2096,7 +2096,7 @@ function setTimestamp() {
   if (!el) return;
   var now = new Date();
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  el.textContent = 'v1.0110 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
+  el.textContent = 'v1.0111 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
 }
 
 // ===== DISCLAIMER / FIRST OPEN =====
@@ -3781,20 +3781,26 @@ function filterTroubleshoot(val) {
 function bkSetLang(lang) {
   if (!lang) return;
   var drop = document.getElementById('bkLangDrop');
+  var linkEl = document.getElementById('gtLangLink');
   if (lang === 'en') {
     if (drop) drop.value = '';
-    var linkEl = document.getElementById('gtLangLink');
     if (linkEl) linkEl.style.display = 'none';
     return;
   }
   var langName = drop ? drop.options[drop.selectedIndex].text : lang;
-  var currentUrl = 'https://harishkumar-vatakara.github.io/bakekar';
-  var translateUrl = 'https://translate.google.com/translate?sl=en&tl=' + lang + '&u=' + encodeURIComponent(currentUrl);
-  // Show tap link in language bar - most reliable method
-  var linkEl = document.getElementById('gtLangLink');
+  // Show browser translate instructions - most reliable across all browsers
   if (linkEl) {
-    linkEl.href = translateUrl;
-    linkEl.innerHTML = '&#128073; Tap here to open Bakekar in ' + langName;
+    linkEl.href = '#';
+    linkEl.onclick = function(e) {
+      e.preventDefault();
+      alert('To translate Bakekar to ' + langName + ':\n\n' +
+            'Chrome: Tap the 3-dot menu \u2192 Translate\n' +
+            'Opera: Tap the O menu \u2192 Translate page\n' +
+            'Samsung: Tap the 3-dot menu \u2192 Translate\n\n' +
+            'Professional baking terms like Ganache, Couverture and SMBC will stay in English.');
+      return false;
+    };
+    linkEl.innerHTML = '&#128073; How to translate Bakekar to ' + langName;
     linkEl.style.display = 'block';
     linkEl.style.marginTop = '4px';
   }
@@ -3859,13 +3865,13 @@ function buildIssueText(){
   var device=document.getElementById('issueDevice')?document.getElementById('issueDevice').value.trim():'';
   var ssDesc=document.getElementById('screenshotDesc')?document.getElementById('screenshotDesc').value.trim():'';
   var sl={sev1:'SEV 1 - App Down',sev2:'SEV 2 - Critical',sev3:'SEV 3 - Partial',sev4:'SEV 4 - Minor',sev5:'SEV 5 - Cosmetic'};
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0110';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0111';
   return '\uD83D\uDEA8 BAKEKAR ISSUE REPORT\nSeverity: '+(sl[sev]||'Not selected')+'\nScreen: '+(screen||'Not specified')+'\nVersion: '+ver+(device?'\nDevice: '+device:'')+'\n\nISSUE:\n'+(desc||'(no description)')+(ssDesc?'\n\nSCREENSHOT NOTE:\n'+ssDesc:'')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function buildFeedbackText(){
   var type=document.getElementById('feedbackType')?document.getElementById('feedbackType').value:'';
   var desc=document.getElementById('feedbackDesc')?document.getElementById('feedbackDesc').value.trim():'';
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0110';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0111';
   return '\uD83D\uDCA1 BAKEKAR FEEDBACK\nType: '+(type||'General')+'\nPriority: '+currentFBPriority+'\nVersion: '+ver+'\n\nFEEDBACK:\n'+(desc||'(no feedback)')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function submitIssue(){
@@ -4728,14 +4734,14 @@ You are not a generic AI. You are Bakekar — built specifically for bakers in I
         </div>
       </div>
       <div style="margin-top:8px">
-        <a href="https://www.youtube.com/@florea-cakes" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
+        <a href="https://www.youtube.com/@floreacakes" target="_blank" style="display:inline-block;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.4);border-radius:20px;padding:5px 14px;font-size:0.72rem;color:#ff7777;text-decoration:none;font-weight:600">&#127916; Visit Channel</a>
       </div>
       <div style="font-size:0.68rem;color:var(--tm);margin-top:6px">&#9432; Link provided as reference only. Bakekar is not responsible for third-party content or outcomes.</div>
     </div>
 <div class="pr-card" style="margin-bottom:8px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div style="flex:1">
-          <div style="font-weight:700;font-size:0.85rem">&#127850; Matt Adlard — Topless Baker</div>
+          <div style="font-weight:700;font-size:0.85rem">&#127850; Matt Adlard — Bake It Better</div>
           <div style="font-size:0.72rem;color:var(--tm);margin-top:2px">United Kingdom &middot; Self-taught professional pastry chef &middot; Bake It Better Academy</div>
           <div style="font-size:0.78rem;line-height:1.7;margin-top:6px">Stabilised creams, chocolate work, entremet, mirror glaze, advanced patisserie techniques. Most followed pastry chef in the UK — 2 million followers. Food Network judge (Christmas Cookie Challenge, Chopped Sweets). Author of Bake It Better (2023) and The Science of Baking (upcoming). Self-taught, known for scientific approach to pastry. Clear British English. Free recipes at mattadlard.com.</div>
         </div>
