@@ -2096,7 +2096,7 @@ function setTimestamp() {
   if (!el) return;
   var now = new Date();
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  el.textContent = 'v1.0111 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
+  el.textContent = 'v1.0112 \u00b7 ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' \u00b7 IST';
 }
 
 // ===== DISCLAIMER / FIRST OPEN =====
@@ -3795,7 +3795,7 @@ function bkSetLang(lang) {
       e.preventDefault();
       alert('To translate Bakekar to ' + langName + ':\n\n' +
             'Chrome: Tap the 3-dot menu \u2192 Translate\n' +
-            'Opera: Tap the O menu \u2192 Translate page\n' +
+            'Opera: Tap the 3-line menu (\u2630) or 3-dot menu \u2192 Translate page\n' +
             'Samsung: Tap the 3-dot menu \u2192 Translate\n\n' +
             'Professional baking terms like Ganache, Couverture and SMBC will stay in English.');
       return false;
@@ -3865,13 +3865,13 @@ function buildIssueText(){
   var device=document.getElementById('issueDevice')?document.getElementById('issueDevice').value.trim():'';
   var ssDesc=document.getElementById('screenshotDesc')?document.getElementById('screenshotDesc').value.trim():'';
   var sl={sev1:'SEV 1 - App Down',sev2:'SEV 2 - Critical',sev3:'SEV 3 - Partial',sev4:'SEV 4 - Minor',sev5:'SEV 5 - Cosmetic'};
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0111';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0112';
   return '\uD83D\uDEA8 BAKEKAR ISSUE REPORT\nSeverity: '+(sl[sev]||'Not selected')+'\nScreen: '+(screen||'Not specified')+'\nVersion: '+ver+(device?'\nDevice: '+device:'')+'\n\nISSUE:\n'+(desc||'(no description)')+(ssDesc?'\n\nSCREENSHOT NOTE:\n'+ssDesc:'')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function buildFeedbackText(){
   var type=document.getElementById('feedbackType')?document.getElementById('feedbackType').value:'';
   var desc=document.getElementById('feedbackDesc')?document.getElementById('feedbackDesc').value.trim():'';
-  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0111';
+  var ver=document.getElementById('verBadge')?document.getElementById('verBadge').textContent:'v1.0112';
   return '\uD83D\uDCA1 BAKEKAR FEEDBACK\nType: '+(type||'General')+'\nPriority: '+currentFBPriority+'\nVersion: '+ver+'\n\nFEEDBACK:\n'+(desc||'(no feedback)')+'\n\nBakekar \u2014 from Maalabaala';
 }
 function submitIssue(){
